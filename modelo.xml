@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<RPPS tipoCarga="">
+	<entidade id="" nome="">
+		<servidores>
+			<servidor nome="" matricula="" contrato="" cargo="" dataIngressoCargo="" salarioBase="" cbo="" nacionalidade="" instrucao="" estadoCivil="" tipoContrato="" cargaHoraria="" diasSemana="" dataNascimento="" sexo="" dataAdmissao="">
+				<documentos>
+					<cpf numero=""/>
+					<rg numero="" orgao=""/>
+					<nit numero=""/>
+				</documentos>
+				<endereco logradouro="" bairro="" cidade="" uf=""/>
+				<historicoFinanceiro>
+					<itemHistoricoFinanceiro mes="" ano="" totalProventos="" aliquotaSegurado="">
+						<salario mensal="" decimoTerceiro=""/>
+						<contribuicao mensal="" decimoTerceiro=""/>
+						<patronalEntidade taxa="" mensal="" decimoTerceiro=""/>
+						<patronalComplementar taxa="" mensal="" decimoTerceiro=""/>
+						<deducoes salarioMaternidade="" salarioFamilia="" outrasDeducoes=""/>
+					</itemHistoricoFinanceiro>
+				</historicoFinanceiro>
+			</servidor>
+		</servidores>
+	</entidade>
+</RPPS>
