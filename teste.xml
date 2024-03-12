@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<RPPS tipoCarga="I">
+	<entidade id="000001" nome="Prefeitura Municipal de Suzano">
+		<servidores>
+			<servidor nome="LIDIA TEIXEIRA DE CAMPOS" matricula="001768" contrato="1" dataIngressoCargo="22-06-1983" salarioBase="2615,64" cbo="334110" nacionalidade="10" instrucao="07" estadoCivil="5" tipoContrato="M" cargaHoraria="200" diasSemana="5" dataNascimento="10-06-1954" sexo="F" dataAdmissao="22-06-1983">
+				<documentos>
+					<cpf numero="00435483854"/>
+					<rg numero="11887260" orgao="SSP" uf="SP"/>
+					<nit numero="10397820426"/>
+				</documentos>
+				<endereco cep="8610101" logradouro="BRASILIA" numero="803" bairro="VILA URUPES" cidade="SUZANO" uf="SP"/>
+				<dependentes>
+					<dependente nome="JANDIR TEIXEIRA DE PAULA" dataNascimento="10-03-1994" sexo="M" parentesco="03" deficienteFisico="N"/>
+				</dependentes>
+				<historicoFinanceiro>
+					<itemHistoricoFinanceiro mes="02" ano="2024" totalProventos="4420,42" aliquotaSegurado="14,00">
+						<salario mensal="4420,42" decimoTerceiro="0,00"/>
+						<contribuicao mensal="618,85" decimoTerceiro="0,00"/>
+						<patronalEntidade taxa="0,00" mensal="1075,93" decimoTerceiro="0,00"/>
+						<patronalComplementar taxa="0,00" mensal="0,00" decimoTerceiro="0,00"/>
+						<deducoes salarioMaternidade="0,00" salarioFamilia="0,00" outrasDeducoes="0"/>
+					</itemHistoricoFinanceiro>
+				</historicoFinanceiro>
+			</servidor>
+			<servidor nome="JOSE ROCHA DA SILVA" matricula="000096" contrato="1" cargo="MOTORISTA" dataIngressoCargo="09-10-1978" salarioBase="2643,72" cbo="782305" nacionalidade="10" instrucao="03" estadoCivil="2" tipoContrato="M" cargaHoraria="200" diasSemana="5" dataNascimento="04-04-1954" sexo="M" dataAdmissao="09-10-1978">
+				<documentos>
+					<cpf numero="86900498868"/>
+					<rg numero="98617606" orgao="SSP" uf="SP" dataEmissao="19-08-2014"/>
+					<nit numero="10261415023"/>
+				</documentos>
+				<endereco cep="13820000" logradouro="PARANA" numero="86" bairro="FONTANELLA" cidade="Jaguariúna" uf="SP"/>
+				<historicoFinanceiro>
+					<itemHistoricoFinanceiro mes="12" ano="2023" totalProventos="7129,31" aliquotaSegurado="14,00">
+						<salario mensal="5463,68" decimoTerceiro="0,00"/>
+						<contribuicao mensal="764,92" decimoTerceiro="764,92"/>
+						<patronalEntidade taxa="16,00" mensal="874,19" decimoTerceiro="874,19"/>
+						<patronalComplementar taxa="12,26" mensal="669,85" decimoTerceiro="669,85"/>
+						<deducoes salarioMaternidade="0,00" salarioFamilia="0,00" outrasDeducoes="0"/>
+					</itemHistoricoFinanceiro>
+				</historicoFinanceiro>
+			</servidor>
+		</servidores>
+	</entidade>
+</RPPS>
