@@ -15,6 +15,9 @@ def obter_estrutura_servidor(elemento):
 def obter_nome_servidor(elemento):
     return elemento.attrib.get('nome', 'Nome não encontrado')  # Retorna o nome do servidor ou uma mensagem padrão se não for encontrado
 
+def obter_matricula_servidor(elemento):
+    return elemento.attrib.get('matricula', 'Matricula não encontrada')  # Retorna o nome do servidor ou uma mensagem padrão se não for encontrado
+
 def comparar_estrutura_servidores(modelo, producao , output_text, progress_bar):
     # Função para comparar a estrutura dos servidores
     output_text.insert(tk.END, "Comparando estrutura dos servidores...\n")
@@ -42,8 +45,9 @@ def comparar_estrutura_servidores(modelo, producao , output_text, progress_bar):
 
     for servidor_producao in raiz_producao.iter('servidor'):
         nome_servidor_producao = obter_nome_servidor(servidor_producao)
+        matricula_servidor_producao = obter_matricula_servidor(servidor_producao)
         estrutura_producao = obter_estrutura_servidor(servidor_producao)
-        output_text.insert(tk.END, f"Comparando servidor '{nome_servidor_producao}': \n")
+        output_text.insert(tk.END, f"Comparando servidor '{nome_servidor_producao}' '{matricula_servidor_producao}': \n")
         for atributo in estrutura_modelo:
             if atributo not in estrutura_producao:
                 output_text.insert(tk.END, f"Atributo '{atributo}' presente no modelo está ausente na produção. \n")
