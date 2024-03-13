@@ -1,85 +1,100 @@
 import xml.etree.ElementTree as ET
 import tkinter as tk
 from tkinter import filedialog
+from tkinter.ttk import Progressbar
+import xml.etree.ElementTree as ET
+import threading
 
-def encontrar_linha_tag_servidor(arquivo_xml):
-    with open(arquivo_xml, 'r') as arquivo:
-        linhas = arquivo.readlines()
-        for numero_linha, linha in enumerate(linhas, start=1):
-            if '<servidor>' in linha:
-                return numero_linha
-    return None
+def obter_estrutura_servidor(elemento):
+    estrutura = {}
+    if elemento is not None:
+        for atributo in elemento.attrib:
+            estrutura[atributo] = None  # Definindo o valor como None
+    return estrutura
 
-def listar_elementos(elemento, resultado, caminho=''):
-    # Adiciona o elemento à lista
-    caminho_atual = caminho + '/' + elemento.tag
-    resultado.append(caminho_atual)
+def obter_nome_servidor(elemento):
+    return elemento.attrib.get('nome', 'Nome não encontrado')  # Retorna o nome do servidor ou uma mensagem padrão se não for encontrado
 
-    # Adiciona os atributos do elemento à lista
-    atributos = elemento.attrib
-    for atributo in atributos:
-        resultado.append(f'{caminho_atual}/@{atributo}')
+def comparar_estrutura_servidores(modelo, producao , output_text, progress_bar):
+    # Função para comparar a estrutura dos servidores
+    output_text.insert(tk.END, "Comparando estrutura dos servidores...\n")
+    output_text.insert(tk.END, "-----------------------------------------------------\n")
+    output_text.update()
 
-    # Recursivamente chama a função para cada filho
-    for filho in elemento:
-        listar_elementos(filho, resultado, caminho_atual)
 
-def selecionar_arquivo(mensagem):
-    root = tk.Tk()
-    root.withdraw()  # Oculta a janela principal
-
-    # Abre a janela de seleção de arquivo
-    arquivo_xml = filedialog.askopenfilename(title=mensagem, filetypes=[("Arquivos XML", "*.xml")])
-
-    if arquivo_xml:
-        return arquivo_xml
-    else:
-        print("Nenhum arquivo selecionado.")
-        return None
-
-def comparar_documentos(arquivo_producao, arquivo_modelo):
-    # Parseia os documentos XML
-    tree_producao = ET.parse(arquivo_producao)
-    raiz_producao = tree_producao.getroot()
-
-    tree_modelo = ET.parse(arquivo_modelo)
+    tree_modelo = ET.parse(modelo)
     raiz_modelo = tree_modelo.getroot()
 
-    # Lista os elementos de cada documento
-    elementos_producao = []
-    listar_elementos(raiz_producao, elementos_producao)
+    encontrou_servidor_modelo = False
+    for servidor_modelo in raiz_modelo.iter('servidor'):
+        estrutura_modelo = obter_estrutura_servidor(servidor_modelo)
+        encontrou_servidor_modelo = True
 
-    elementos_modelo = []
-    listar_elementos(raiz_modelo, elementos_modelo)
+    if not encontrou_servidor_modelo:
+        print("Tag <servidor> não encontrada no XML de modelo.")
+        return
 
-    # Compara os elementos e identifica os faltantes
-    elementos_faltantes = set(elementos_modelo) - set(elementos_producao)
+    tree_producao = ET.parse(producao)
+    raiz_producao = tree_producao.getroot()
 
-    # Se houver elementos faltantes, imprime-os
-    if elementos_faltantes:
-        print("Elementos faltantes no documento de produção:")
-        for elemento in elementos_faltantes:
-            print(elemento)
-        
-        # Encontra a linha onde a tag <servidor> está presente no arquivo de produção
-        linha_servidor_producao = encontrar_linha_tag_servidor(arquivo_producao)
-        if linha_servidor_producao:
-            print(f"A tag 'servidor' está presente na linha {linha_servidor_producao} do arquivo de produção.")
-    else:
-        print("Nenhum elemento faltante encontrado.")
+    for servidor_producao in raiz_producao.iter('servidor'):
+        nome_servidor_producao = obter_nome_servidor(servidor_producao)
+        estrutura_producao = obter_estrutura_servidor(servidor_producao)
+        output_text.insert(tk.END, f"Comparando servidor '{nome_servidor_producao}': \n")
+        for atributo in estrutura_modelo:
+            if atributo not in estrutura_producao:
+                output_text.insert(tk.END, f"Atributo '{atributo}' presente no modelo está ausente na produção. \n")
+        for atributo in estrutura_producao:
+            if atributo not in estrutura_modelo:
+                output_text.insert(tk.END, f"Atributo '{atributo}' presente na produção está ausente no modelo. \n")
+
+def selecionar_arquivo():
+    arquivo_xml = filedialog.askopenfilename(title="Selecione o arquivo XML", filetypes=[("Arquivos XML", "*.xml")])
+    return arquivo_xml
+
+def comparar_arquivos(output_text, progress_bar):
+    output_text.delete(1.0, tk.END)  # Limpar qualquer texto anterior
+    arquivo_xml_modelo = selecionar_arquivo()
+    if not arquivo_xml_modelo:
+        return
+
+    arquivo_xml_producao = selecionar_arquivo()
+    if not arquivo_xml_producao:
+        return
+
+    # Iniciar uma thread para executar a comparação, permitindo que a interface gráfica permaneça responsiva
+    threading.Thread(target=comparar_estrutura_servidores, args=(arquivo_xml_modelo, arquivo_xml_producao, output_text, progress_bar)).start()
+
 
 def main():
+    # Seleciona o arquivo XML de modelo
+    arquivo_xml_modelo = selecionar_arquivo("Selecione o arquivo XML de Modelo")
+    if not arquivo_xml_modelo:
+        return
+
     # Seleciona o arquivo XML de produção
     arquivo_xml_producao = selecionar_arquivo("Selecione o arquivo XML de Produção")
+    if not arquivo_xml_producao:
+        return
 
-    # Se um arquivo de produção for selecionado, prossiga
-    if arquivo_xml_producao:
-        # Seleciona o arquivo XML de modelo
-        arquivo_xml_modelo = selecionar_arquivo("Selecione o arquivo XML de Modelo")
+    # Realiza a comparação entre os servidores dos XMLs
+    comparar_estrutura_servidores(arquivo_xml_modelo, arquivo_xml_producao)
 
-        # Se um arquivo de modelo for selecionado, prossiga
-        if arquivo_xml_modelo:
-            comparar_documentos(arquivo_xml_producao, arquivo_xml_modelo)
+# Criar a janela principal
+root = tk.Tk()
+root.title("Comparador de Estrutura XML")
 
-if __name__ == "__main__":
-    main()
+# Botão para iniciar a comparação
+btn_comparar = tk.Button(root, text="Comparar Arquivos XML", command=lambda: comparar_arquivos(output_text, progress_bar))
+btn_comparar.pack(pady=10)
+
+# Widget de texto para exibir mensagens
+output_text = tk.Text(root, wrap="word")
+output_text.pack()
+
+# Barra de progresso
+progress_bar = Progressbar(root, orient=tk.HORIZONTAL, length=200, mode='indeterminate')
+progress_bar.pack(pady=10)
+
+# Iniciar o loop da interface gráfica
+root.mainloop()
